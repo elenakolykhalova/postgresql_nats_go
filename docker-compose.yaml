@@ -1,0 +1,33 @@
+version: "3.3"
+
+services:
+  nats:
+    image: nats-streaming:0.24.6
+    restart: always
+    container_name: nats
+    networks:
+      - user_network
+    hostname: nats
+    ports:
+      - "4222:4222"
+
+  postgresdb:
+    image: postgres:latest
+    restart: always
+    container_name: psql
+    environment:
+      - POSTGRES_USER=mcarry
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=testmcarry
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_storage:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_storage:
+
+networks:
+  user_network:
+    driver: bridge

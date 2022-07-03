@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>L0</title>
+	<style type="text/css">
+		body{
+			margin: 5%; 
+			display: flex;
+			flex-direction: column;
+			align-items: left;
+		}
+		.placeholder{
+			flex: 1;
+			width: 33%;
+		}
+	</style>
+	<script type="text/javascript">
+		document.addEventListener("DOMActivate", function(){
+			let btn = document.querySelector('input[type=submit]');
+			btn.addEventListener('click', async function(event){
+				event.preventDefault();
+				let superID = document.querySelector('input[name=id]').value;
+				let query = await fetch("/id?id=" + superID);
+				let response = await query.json();
+				if (response["order_uid"] != superID+" is nil"){
+					
+					let newBody = document.querySelector('body')
+					let L_chrt_id = ""
+					for (i = 1; i <= response["items"].length; i++){
+						L_chrt_id += `<p align='left'>item ${i} </p>`;
+						L_chrt_id += `<b>chrt_id:<b><output name='chrt_id${i}'>${response["items"][i - 1]["chrt_id"]}</output> <br>`;
+						L_chrt_id += `<b>track_number:<b><output name='track_number${i}'>${response["items"][i - 1]["track_number"]}</output> <br>`;
+						L_chrt_id += `<b>price:<b><output name='price${i}'>${response["items"][i - 1]["price"]}</output> <br>`;
+						L_chrt_id += `<b>rid:<b><output name='rid${i}'>${response["items"][i - 1]["rid"]}</output> <br>`;
+						L_chrt_id += `<b>name:<b><output name='name${i}'>${response["items"][i - 1]["name"]}</output> <br>`;
+						L_chrt_id += `<b>sale:<b><output name='sale${i}'>${response["items"][i - 1]["sale"]}</output> <br>`;
+						L_chrt_id += `<b>size:<b><output name='size${i}'>${response["items"][i - 1]["size"]}</output> <br>`;
+						L_chrt_id += `<b>total_price:<b><output name='total_price${i}'>${response["items"][i - 1]["total_price"]}</output> <br>`;
+						L_chrt_id += `<b>nm_id:<b><output name='nm_id${i}'>${response["items"][i - 1]["nm_id"]}</output> <br>`;
+						L_chrt_id += `<b>brand:<b><output name='brand${i}'>${response["items"][i - 1]["brand"]}</output> <br>`;
+						L_chrt_id += `<b>status:<b><output name='status${i}'>${response["items"][i - 1]["status"]}</output> <br>`;
+					}
+					console.log(L_chrt_id);
+					newBody.innerHTML = `\
+						<div class='placeholder'></div>\
+						<h3>Введите id заказа</h3>\
+							<form method='GET' action='/id'>\
+								<input type='text' name='id'/>\
+								<input type='submit' value='OK'><br><br><br>\
+							</form>\
+						<div class='placeholder'></div>\
+						<p>Нашли!</p>\
+						<b>order_uid:<b><output name='order_uid'>${response["order_uid"]}</output> <br>\
+						<b>track_number:<b><output name='track_number'>${response["track_number"]}</output> <br>\
+						<b>entry:<b><output name='entry'>${response["entry"]}</output> <br>\
+						<hr>\
+						<p align='left'>delivery</p>\
+							<b>name:<b><output name='name'>${response["delivery"]["name"]}</output> <br>\
+							<b>phone:<b><output name='phone'>${response["delivery"]["phone"]}</output> <br>\
+							<b>zip:<b><output name='zip'>${response["delivery"]["zip"]}</output> <br>\
+							<b>city:<b><output name='city'>${response["delivery"]["city"]}</output> <br>\
+							<b>address:<b><output name='address'>${response["delivery"]["address"]}</output> <br>\
+							<b>region:<b><output name='region'>${response["delivery"]["region"]}</output> <br>\
+							<b>email:<b><output name='email'>${response["delivery"]["email"]}</output> <br>\
+						<hr>\
+						<p align='left'>Payment</p>\
+							<b>transaction:<b><output name='transaction'>${response["payment"]["transaction"]}</output> <br>\
+							<b>request_id:<b><output name='request_id'>${response["payment"]["request_id"]}</output> <br>\
+							<b>currency:<b><output name='currency'>${response["payment"]["currency"]}</output> <br>\
+							<b>provider:<b><output name='provider'>${response["payment"]["provider"]}</output> <br>\
+							<b>amount:<b><output name='amount'>${response["payment"]["amount"]}</output> <br>\
+							<b>payment_dt:<b><output name='payment_dt'>${response["payment"]["payment_dt"]}</output> <br>\
+							<b>bank:<b><output name='bank'>${response["payment"]["bank"]}</output> <br>\
+							<b>delivery_cost:<b><output name='delivery_cost'>${response["payment"]["delivery_cost"]}</output> <br>\
+							<b>goods_total:<b><output name='goods_total'>${response["payment"]["goods_total"]}</output> <br>\
+							<b>custom_fee:<b><output name='custom_fee'>${response["payment"]["custom_fee"]}</output> <br>\
+							<hr>${L_chrt_id}<hr>\
+							<b>locale:<b><output name='locale'>${response["locale"]}</output> <br>\
+							<b>internal_signature:<b><output name='internal_signature'>${response["internal_signature"]}</output> <br>\
+							<b>customer_id:<b><output name='customer_id'>${response["customer_id"]}</output> <br>\
+							<b>delivery_service:<b><output name='delivery_service'>${response["delivery_service"]}</output> <br>\
+							<b>shardkey:<b><output name='shardkey'>${response["shardkey"]}</output> <br>\
+							<b>sm_id:<b><output name='sm_id'>${response["sm_id"]}</output> <br>\
+							<b>date_created:<b><output name='date_created'>${response["date_created"]}</output> <br>\
+							<b>oof_shard:<b><output name='oof_shard'>${response["oof_shard"]}</output> <br>\
+							
+						`
+					
+				} else{
+					let s = document.querySelector('input[name=id]').value;
+					console.log(s);
+					let newBody = document.querySelector('body')
+					newBody.innerHTML = '<div class="placeholder"></div>\
+					<h3>Введите id заказа</h3>\
+					<form method="GET" action="/id">\
+						<input type="text" name="id"/>\
+						<input type="submit" value="OK"><br><br><br>\
+					</form>\<b>order_uid:<b><output name="order_uid"></output> <br>'
+					let Order_uid = document.querySelector('output');
+					Order_uid.value = ("  '" + superID + "' не найден");
+				}
+			})
+		})
+	</script>
+</head>
+<body>
+	<div class="placeholder"></div>
+	<h3>Введите id заказа</h3>
+	<form method="GET" action="/id">
+		<input type="text" name="id"/>
+		<input type="submit" value="OK"><br><br><br>
+	</form>
+	<div class="placeholder"></div>
+</body>
+</html>
